@@ -7,6 +7,7 @@ import java.util.Set;
 
 /**
  * Неориентированный граф.
+ * @param <T> - тип данных имен вершин графа.
  */
 public class Graph<T> {
 
@@ -24,6 +25,10 @@ public class Graph<T> {
     /** Счетчик компонент связности. */
     private int componentsCounter;
 
+    /**
+     * Добавление вершин в граф по заданному множеству связей между вершинами.
+     * @param edges - множество ребер.
+     */
     public void buildByEdges(Set<Edge<T>> edges) {
         for (Edge<T> edge : edges) {
             T name1 = edge.getVertex1Name();
@@ -39,6 +44,14 @@ public class Graph<T> {
         }
     }
 
+    /*
+    Сначала предусмотрел только возможность создания графа по множестве ребер, но, перечитав формулировку задачи,
+    решил на всякий случай добавить и такую опцию.
+     */
+    /**
+     * Добавление вершин в граф при подаче на вход множества вершин.
+     * @param vertexes - множество вершин.
+     */
     public void buildByVertexes(Set<Vertex<T>> vertexes) {
         for (Vertex<T> vertex : vertexes) {
             graph.put(vertex.getName(), vertex);
