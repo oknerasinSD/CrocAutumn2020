@@ -44,22 +44,28 @@ public class GraphTest {
     };
 
     /**
-     * Вершины для примера 3.
+     * Вершины для примера 3 - имена вершин являются экземплярами самописного класса.
+     * В множестве вершин имеются имеются дубли в виде разных экземпляров класса Vertex, имеющих ссылку на одинаковый
+     * объект в поле name и совпадающие поэлементно множества в поле linkedVertex.
      * Рисунок графа: https://ibb.co/Xj3rWm5
      */
-    private Vertex<Person> petr = new Vertex<>(new Person("Petr"));
+    private Vertex<Person> petr1 = new Vertex<>(new Person("Petr"));
+    private Vertex<Person> petr2 = new Vertex<>(petr1.getName());
     private Vertex<Person> maria = new Vertex<>(new Person("Maria"));
     private Vertex<Person> yuri = new Vertex<>(new Person("Yuri"));
     private Vertex<Person> anna = new Vertex<>(new Person("Anna"));
     private Vertex<Person> andrey = new Vertex<>(new Person("Andrey"));
     private Vertex<Person> dmitri = new Vertex<>(new Person("Dmitri"));
     private Vertex<Person> nadezhda = new Vertex<>(new Person("Nadezhda"));
-    private Vertex<Person> boris = new Vertex<>(new Person("Boris"));
+    private Vertex<Person> boris1 = new Vertex<>(new Person("Boris"));
+    private Vertex<Person> boris2 = new Vertex<>(boris1.getName());
+    private Vertex<Person> boris3 = new Vertex<>(boris1.getName());
     private Vertex<Person> irina = new Vertex<>(new Person("Irina"));
     private Vertex<Person> kirill = new Vertex<>(new Person("Kirill"));
     private Vertex<Person> ekaterina = new Vertex<>(new Person("Ekaterina"));
     private Set<Vertex<Person>> vertexes = new HashSet<>(
-            Arrays.asList(petr, maria, yuri, anna, andrey, dmitri, nadezhda, boris, irina, kirill, ekaterina)
+            Arrays.asList(petr1, petr2, maria, yuri, anna, andrey, dmitri, nadezhda,
+                    boris1, boris2, boris3, irina, kirill, ekaterina)
     );
 
     /**
@@ -67,20 +73,26 @@ public class GraphTest {
      */
     private void linkVertexes() {
 
-        petr.addLinkedVertexes(new HashSet<>(Arrays.asList(maria, yuri, anna, andrey)));
-        maria.addLinkedVertexes(new HashSet<>(Arrays.asList(petr, yuri, anna, andrey)));
-        yuri.addLinkedVertexes(new HashSet<>(Arrays.asList(petr, maria)));
+        petr1.addLinkedVertexes(new HashSet<>(Arrays.asList(maria, yuri, anna, andrey)));
+        petr2.addLinkedVertexes(new HashSet<>(Arrays.asList(maria, yuri, anna, andrey)));
+        maria.addLinkedVertexes(new HashSet<>(Arrays.asList(petr1, yuri, anna, andrey)));
+        yuri.addLinkedVertexes(new HashSet<>(Arrays.asList(petr1, maria)));
         anna.addLinkedVertexes(yuri.getLinkedVertexes());
         andrey.addLinkedVertexes(yuri.getLinkedVertexes());
 
-        dmitri.addLinkedVertexes(new HashSet<>(Arrays.asList(nadezhda, boris)));
-        nadezhda.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri, boris)));
-        boris.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri, nadezhda, irina)));
-        irina.addLinkedVertexes(new HashSet<>(Arrays.asList(boris, kirill)));
-        kirill.addLinkedVertexes(new HashSet<>(Arrays.asList(boris, irina, ekaterina)));
+        dmitri.addLinkedVertexes(new HashSet<>(Arrays.asList(nadezhda, boris1)));
+        nadezhda.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri, boris1)));
+        boris1.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri, nadezhda, irina)));
+        boris2.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri, nadezhda, irina)));
+        boris3.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri, nadezhda, irina)));
+        irina.addLinkedVertexes(new HashSet<>(Arrays.asList(boris1, kirill)));
+        kirill.addLinkedVertexes(new HashSet<>(Arrays.asList(boris1, irina, ekaterina)));
         ekaterina.addLinkedVertex(kirill);
     }
 
+    /*
+    Пример 4 - проверка корректности работы программы при подаче на вход пустых множеств вершин или ребер.
+     */
     private Set<Vertex<Integer>> emptyVertexSet = Collections.emptySet();
     private Set<Edge<Integer>> emptyEdgesSet = Collections.emptySet();
 
@@ -156,7 +168,7 @@ public class GraphTest {
                 case 5:
                     Assertions.assertTrue(
                             currentComponent.containsAll(new HashSet<>(Arrays.asList(
-                                    petr.getName(),
+                                    petr1.getName(),
                                     maria.getName(),
                                     yuri.getName(),
                                     anna.getName(),
@@ -170,7 +182,7 @@ public class GraphTest {
                             currentComponent.containsAll(new HashSet<>(Arrays.asList(
                                     dmitri.getName(),
                                     nadezhda.getName(),
-                                    boris.getName(),
+                                    boris1.getName(),
                                     irina.getName(),
                                     kirill.getName(),
                                     ekaterina.getName())
@@ -184,7 +196,7 @@ public class GraphTest {
 
 
         /*
-        Проверяем для случая, когда на вход подаются пустые множества ребер или вершин.
+        Проверяем случай, когда на вход подаются пустые множества ребер или вершин.
          */
         Graph<Integer> graph4 = new Graph<>();
         graph4.buildByEdges(emptyEdgesSet);
