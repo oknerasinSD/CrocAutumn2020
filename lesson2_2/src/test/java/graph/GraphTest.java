@@ -44,50 +44,56 @@ public class GraphTest {
     };
 
     /**
-     * Вершины для примера 3 - имена вершин являются экземплярами самописного класса.
-     * В множестве вершин имеются имеются дубли в виде разных экземпляров класса Vertex, имеющих ссылку на одинаковый
-     * объект в поле name и совпадающие поэлементно множества в поле linkedVertex.
+     * Вершины для примера 3 - имена вершин являются экземплярами класса, для которых метод equals будет сравнивать
+     * ссылки, а во входном множестве вершин имеются имеются дубли в виде разных экземпляров класса Vertex,
+     * имеющих ссылку на одинаковый объект в поле name и совпадающие поэлементно множества в поле linkedVertex.
      * Рисунок графа: https://ibb.co/Xj3rWm5
      */
-    private Vertex<Person> petr1 = new Vertex<>(new Person("Petr"));
-    private Vertex<Person> petr2 = new Vertex<>(petr1.getName());
+    private Vertex<Person> petr2 = new Vertex<>(new Person("Petr"));
+    private Vertex<Person> petr = new Vertex<>(petr2.getName());
     private Vertex<Person> maria = new Vertex<>(new Person("Maria"));
     private Vertex<Person> yuri = new Vertex<>(new Person("Yuri"));
     private Vertex<Person> anna = new Vertex<>(new Person("Anna"));
     private Vertex<Person> andrey = new Vertex<>(new Person("Andrey"));
     private Vertex<Person> dmitri = new Vertex<>(new Person("Dmitri"));
     private Vertex<Person> nadezhda = new Vertex<>(new Person("Nadezhda"));
-    private Vertex<Person> boris1 = new Vertex<>(new Person("Boris"));
-    private Vertex<Person> boris2 = new Vertex<>(boris1.getName());
-    private Vertex<Person> boris3 = new Vertex<>(boris1.getName());
+    private Vertex<Person> boris3 = new Vertex<>(new Person("Boris"));
+    private Vertex<Person> boris = new Vertex<>(boris3.getName());
+    private Vertex<Person> boris2 = new Vertex<>(boris3.getName());
     private Vertex<Person> irina = new Vertex<>(new Person("Irina"));
     private Vertex<Person> kirill = new Vertex<>(new Person("Kirill"));
     private Vertex<Person> ekaterina = new Vertex<>(new Person("Ekaterina"));
     private Set<Vertex<Person>> vertexes = new HashSet<>(
-            Arrays.asList(petr1, petr2, maria, yuri, anna, andrey, dmitri, nadezhda,
-                    boris1, boris2, boris3, irina, kirill, ekaterina)
+            Arrays.asList(petr, petr2, maria, yuri, anna, andrey, dmitri, nadezhda,
+                    boris, boris2, boris3, irina, kirill, ekaterina)
     );
 
     /**
-     * Метод установки связей между вершинами для примера 3.
+     * Установка связей между вершинами для примера 3.
      */
     private void linkVertexes() {
 
-        petr1.addLinkedVertexes(new HashSet<>(Arrays.asList(maria, yuri, anna, andrey)));
-        petr2.addLinkedVertexes(new HashSet<>(Arrays.asList(maria, yuri, anna, andrey)));
-        maria.addLinkedVertexes(new HashSet<>(Arrays.asList(petr1, yuri, anna, andrey)));
-        yuri.addLinkedVertexes(new HashSet<>(Arrays.asList(petr1, maria)));
+        petr.addLinkedVertexes(new HashSet<>(
+                Arrays.asList(maria.getName(), yuri.getName(), anna.getName(), andrey.getName()))
+        );
+        petr2.addLinkedVertexes(new HashSet<>(
+                Arrays.asList(maria.getName(), yuri.getName(), anna.getName(), andrey.getName()))
+        );
+        maria.addLinkedVertexes(new HashSet<>(
+                Arrays.asList(petr.getName(), yuri.getName(), anna.getName(), andrey.getName()))
+        );
+        yuri.addLinkedVertexes(new HashSet<>(Arrays.asList(petr.getName(), maria.getName())));
         anna.addLinkedVertexes(yuri.getLinkedVertexes());
         andrey.addLinkedVertexes(yuri.getLinkedVertexes());
 
-        dmitri.addLinkedVertexes(new HashSet<>(Arrays.asList(nadezhda, boris1)));
-        nadezhda.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri, boris1)));
-        boris1.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri, nadezhda, irina)));
-        boris2.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri, nadezhda, irina)));
-        boris3.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri, nadezhda, irina)));
-        irina.addLinkedVertexes(new HashSet<>(Arrays.asList(boris1, kirill)));
-        kirill.addLinkedVertexes(new HashSet<>(Arrays.asList(boris1, irina, ekaterina)));
-        ekaterina.addLinkedVertex(kirill);
+        dmitri.addLinkedVertexes(new HashSet<>(Arrays.asList(nadezhda.getName(), boris.getName())));
+        nadezhda.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri.getName(), boris.getName())));
+        boris.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri.getName(), nadezhda.getName(), irina.getName())));
+        boris2.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri.getName(), nadezhda.getName(), irina.getName())));
+        boris3.addLinkedVertexes(new HashSet<>(Arrays.asList(dmitri.getName(), nadezhda.getName(), irina.getName())));
+        irina.addLinkedVertexes(new HashSet<>(Arrays.asList(boris.getName(), kirill.getName())));
+        kirill.addLinkedVertexes(new HashSet<>(Arrays.asList(boris.getName(), irina.getName(), ekaterina.getName())));
+        ekaterina.addLinkedVertex(kirill.getName());
     }
 
     /*
@@ -139,6 +145,7 @@ public class GraphTest {
 
 
 
+
         Graph<String> graph2 = new Graph<>();
         graph2.buildByEdges(buildEdgesSet(links2));
         Map<Integer, Set<String>> components2 = graph2.findComponents();
@@ -150,17 +157,28 @@ public class GraphTest {
 
 
 
+
         Graph<Person> graph3 = new Graph<>();
         linkVertexes();
         graph3.buildByVertexes(vertexes);
         Map<Integer, Set<Person>> components3 = graph3.findComponents();
 
         Assertions.assertEquals(2, components3.size());
+
         /*
-        Поскольку мое разбиение возвращает множество имен вершин, а не множество самих вершин, в случае использования
-        в качестве имени вершины экземпляров самописного класса получается вот такая многоэтажная проверка,
-        т.к. объекты petr, maria и т.д. в данном примере являются экземплярами класса Vertex,
-        а множества в мапе содержат экземпляры класса Person.
+        Этот тест упадет при хранении в поле linkedVertexes класса Vertex не имен соседей, а ссылок на них.
+
+        Vertex<Person> checkPetr = new Vertex<>(new Person(""));
+        for (Vertex<Person> linkedVertex : anna.getLinkedVertexes()) {
+            if ("Petr".equals(linkedVertex.getName().getName())) {
+                checkPetr = linkedVertex;
+            }
+        }
+        Assertions.assertTrue(graph3.hasVertex(checkPetr));
+        */
+
+        /*
+        Проверяем содержимое компонент связности.
          */
         for (Integer component : components3.keySet()) {
             Set<Person> currentComponent = components3.get(component);
@@ -168,7 +186,7 @@ public class GraphTest {
                 case 5:
                     Assertions.assertTrue(
                             currentComponent.containsAll(new HashSet<>(Arrays.asList(
-                                    petr1.getName(),
+                                    petr.getName(),
                                     maria.getName(),
                                     yuri.getName(),
                                     anna.getName(),
@@ -182,7 +200,7 @@ public class GraphTest {
                             currentComponent.containsAll(new HashSet<>(Arrays.asList(
                                     dmitri.getName(),
                                     nadezhda.getName(),
-                                    boris1.getName(),
+                                    boris.getName(),
                                     irina.getName(),
                                     kirill.getName(),
                                     ekaterina.getName())

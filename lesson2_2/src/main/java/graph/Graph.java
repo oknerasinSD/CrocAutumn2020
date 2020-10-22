@@ -38,19 +38,14 @@ public class Graph<T> {
             if (!graph.containsKey(name2)) {
                 graph.put(name2, new Vertex<>(name2));
             }
-            graph.get(name1).addLinkedVertex(graph.get(name2));
-            graph.get(name2).addLinkedVertex(graph.get(name1));
+            graph.get(name1).addLinkedVertex(graph.get(name2).getName());
+            graph.get(name2).addLinkedVertex(graph.get(name1).getName());
         }
     }
 
     /*
-    - Сначала предусмотрел только возможность создания графа по множестве ребер, но, перечитав формулировку задачи,
+    Сначала предусмотрел только возможность создания графа по множестве ребер, но, перечитав формулировку задачи,
     добавил и такую опцию, но не стал убирать первую.
-    - Проверка на наличие текущего ключа в графе помогает при присутствии во входном множестве дублей в виде разных
-    экземпляров класса Vertex, имеющих в поле name ссылку на один объект и ссылки на совпадающие множества в поле
-    linkedVertex.
-    - Без этой проверки в граф запишется последняя подобная вершина, ссылок на которую может не быть у других связанных
-    с ней вершин. Это показано в Примере 3 тестов. Если убрать проверку, то данный тест упадет.
      */
     /**
      * Добавление вершин в граф при подаче на вход множества вершин.
@@ -58,9 +53,7 @@ public class Graph<T> {
      */
     public void buildByVertexes(Set<Vertex<T>> vertexes) {
         for (Vertex<T> vertex : vertexes) {
-            if (!graph.containsKey(vertex.getName())) {
-                graph.put(vertex.getName(), vertex);
-            }
+            graph.put(vertex.getName(), vertex);
         }
     }
 
@@ -94,9 +87,9 @@ public class Graph<T> {
     private void dfs(Vertex<T> vertex, int component) {
         vertex.setVisited(true);
         vertex.setComponent(component == -1 ? componentsCounter : component);
-        for (Vertex<T> linkedVertex : vertex.getLinkedVertexes()) {
-            if (!linkedVertex.isVisited()) {
-                dfs(linkedVertex, component);
+        for (T linkedVertex : vertex.getLinkedVertexes()) {
+            if (!graph.get(linkedVertex).isVisited()) {
+                dfs(graph.get(linkedVertex), component);
             }
         }
     }
@@ -118,6 +111,24 @@ public class Graph<T> {
             }
         }
         return components;
+    }
+
+    /**
+     * Получение экземпляра класса Vertex по имени вершины.
+     * @param name - имя вершины.
+     * @return - вершина, экземпляр класса Vertex.
+     */
+    public Vertex<T> getVertexByName(T name) {
+        return graph.get(name);
+    }
+
+    /**
+     * Проверка на наличие вершины в графе.
+     * @param vertex - искомая вершина.
+     * @return - True || False.
+     */
+    public boolean hasVertex(Vertex<T> vertex) {
+        return graph.get(vertex.getName()).equals(vertex);
     }
 
     int getComponentsCounter() {
