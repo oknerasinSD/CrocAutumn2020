@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/*
+В качестве имени файла всегда используется поле id объекта.
+ */
 public class DataTest {
 
     Data data = new Data();
@@ -70,14 +73,42 @@ public class DataTest {
     }
 
     @Test
-    @DisplayName("Изменение статуса задачи.")
+    @DisplayName("Изменение статуса задачи пользователем")
     public void updateStatusTest() {
 
+        String input = "5\n1\n1\n0";
+        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        data.serializeObject(task2, task2.getId());
+        Task checkedTask = (Task) data.deserializeObject(
+                data.getTasksDirectory(),
+                Objects.requireNonNull(data.getTasksDirectory().list())[0]
+        );
+        boolean initialStatus = checkedTask.isActive();
+        new Main().run(inputStream);
+        checkedTask = (Task) data.deserializeObject(
+                data.getTasksDirectory(),
+                Objects.requireNonNull(data.getTasksDirectory().list())[0]
+        );
+        Assertions.assertNotEquals(initialStatus, checkedTask.isActive());
     }
 
     @Test
-    @DisplayName("Изменение исполнителя задачи")
+    @DisplayName("Изменение исполнителя задачи пользователем")
     public void updateExecutorTest() {
 
+        String input = "6\n1\n1\n1\n1\n0";
+        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        data.serializeObject(task3, task3.getId());
+        data.serializeObject(petrPetrov, petrPetrov.getId());
+        new Main().run(inputStream);
+        Executor chosenExecutor = (Executor) data.deserializeObject(
+                data.getExecutorsDirectory(),
+                Objects.requireNonNull(data.getExecutorsDirectory().list())[0]
+        );
+        Task checkedTask = (Task) data.deserializeObject(
+                data.getTasksDirectory(),
+                Objects.requireNonNull(data.getTasksDirectory().list())[0]
+        );
+        Assertions.assertEquals(chosenExecutor.getId(), checkedTask.getExecutor().getId());
     }
 }
