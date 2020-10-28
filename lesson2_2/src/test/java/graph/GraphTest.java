@@ -165,7 +165,7 @@ public class GraphTest {
 
         Assertions.assertEquals(2, components3.size());
 
-        /*
+/*
         Этот тест упадет при хранении в поле linkedVertexes класса Vertex не имен соседей, а ссылок на них.
 
         Vertex<Person> checkPetr = new Vertex<>(new Person(""));
@@ -175,7 +175,7 @@ public class GraphTest {
             }
         }
         Assertions.assertTrue(graph3.hasVertex(checkPetr));
-        */
+*/
 
         /*
         Проверяем содержимое компонент связности.
