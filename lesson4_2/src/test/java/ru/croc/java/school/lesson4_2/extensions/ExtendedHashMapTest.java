@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.croc.java.school.lesson4_2.annotated_entities.AnnotatedKey;
 import ru.croc.java.school.lesson4_2.annotated_entities.AnnotatedValue;
-import ru.croc.java.school.lesson4_2.exeptions.PutMapKeyFailException;
-import ru.croc.java.school.lesson4_2.exeptions.PutMapValueFailException;
+import ru.croc.java.school.lesson4_2.exceptions.PutMapKeyFailException;
+import ru.croc.java.school.lesson4_2.exceptions.PutMapValueFailException;
 
 import java.util.Map;
 

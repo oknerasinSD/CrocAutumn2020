@@ -2,8 +2,8 @@ package ru.croc.java.school.lesson4_2.extensions;
 
 import ru.croc.java.school.lesson4_2.annotations.MapKeyFail;
 import ru.croc.java.school.lesson4_2.annotations.MapValueFail;
-import ru.croc.java.school.lesson4_2.exeptions.PutMapKeyFailException;
-import ru.croc.java.school.lesson4_2.exeptions.PutMapValueFailException;
+import ru.croc.java.school.lesson4_2.exceptions.PutMapKeyFailException;
+import ru.croc.java.school.lesson4_2.exceptions.PutMapValueFailException;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
