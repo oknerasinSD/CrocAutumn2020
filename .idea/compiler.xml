@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="lesson3" />
+        <module name="lesson6_2" />
         <module name="lesson4_2" />
         <module name="lesson2_2" />
         <module name="lesson2_1" />
@@ -23,6 +24,7 @@
       <module name="lesson4_2" target="11" />
       <module name="lesson5" target="1.8" />
       <module name="lesson6_1" target="11" />
+      <module name="lesson6_2" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
