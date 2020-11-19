@@ -1,7 +1,6 @@
 package ru.croc.java.school.lesson6_1;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -11,20 +10,16 @@ import java.util.Objects;
 public class CleanDirectoryTest {
 
     /** Тестовая директория, которую очищает поток */
-    private File testDirectory;
-
-    @BeforeEach
-    public void init() {
-        testDirectory = new File("testDirectory");
-        testDirectory.mkdir();
-    }
+    private File testDirectory = new File("testDirectory");
 
     @Test
     public void testCleanDirectory() throws IOException, InterruptedException {
 
+        testDirectory.mkdir();
         addFiles(testDirectory, 10);
         Assertions.assertEquals(10, Objects.requireNonNull(testDirectory.list()).length);
         CleanDirectory cleanDirectory = new CleanDirectory(1000, testDirectory.getPath());
+        cleanDirectory.startThread();
         Thread.sleep(500);
         Assertions.assertEquals(0, Objects.requireNonNull(testDirectory.list()).length);
 

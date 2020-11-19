@@ -14,6 +14,15 @@ public class SearchForMaxTest {
         Assertions.assertEquals(search(array), searchForMax.search());
     }
 
+    @Test
+    public void testIllegalArraySize() {
+        int[] array = buildArray(10_000_001);
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> {new SearchForMax(buildArray(10_000_001), 4);}
+                );
+    }
+
     /**
      * Однопоточный метод поиска максимума для проверки корректности работы многопоточного алгоритма.
      * @param array - массив.

@@ -18,12 +18,19 @@ public class CleanDirectory {
     public CleanDirectory(long time, String directory) {
         thread = new Thread(new CleanDirectoryThread(time, directory));
         thread.setDaemon(true);
+    }
+
+    /**
+     * Запуск потока.
+     */
+    public void startThread() {
         thread.start();
     }
 
     /**
      * Остановка потока.
-     * @throws InterruptedException - выбрасывается при попытке остановить спящий поток.
+     * @throws InterruptedException - выбрасывается, если поток, завершения которого мы ожидаем в методе join(),
+     * был прерван, и этот случай не был обработан.
      */
     public void stopThread() throws InterruptedException {
         thread.interrupt();

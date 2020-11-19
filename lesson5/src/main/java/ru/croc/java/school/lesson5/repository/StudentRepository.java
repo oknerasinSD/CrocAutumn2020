@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Репозиторий для доступа к таблице с данными о студентах.
+ */
 public class StudentRepository {
 
     /** Имя таблицы */
@@ -91,7 +94,7 @@ public class StudentRepository {
 
     /**
      * Формирование списка студентов из объекта ResultSet.
-     * @param resultSet - объект типа ResultSet, из которого необходимо получить список объектов.
+     * @param resultSet - объект типа ResultSet, из которого необходимо получить список объектов типа Student.
      * @throws SQLException - ошибка исполнения SQL-запроса; должна обрабатываться вызывающим методом.
      */
     private List<Student> createListFromResultSet(ResultSet resultSet) throws SQLException {
@@ -176,7 +179,7 @@ public class StudentRepository {
      * Подстановка параметров в запрос.
      * @param Student - студент.
      * @param preparedStatement - экземпляр класса PreparedStatement.
-     * @param counter - счетчик параметров (первый параметр для подстановки опционален).
+     * @param counter - счетчик параметров (параметр, с которого начинается подстановка, опционален).
      * @throws SQLException - ошибка исполнения SQL-запроса.
      */
     private void prepareStudentStatement(

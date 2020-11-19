@@ -3,16 +3,19 @@ package ru.croc.java.school.lesson6_1;
 import java.io.File;
 import java.util.Objects;
 
+/**
+ * Поток очищающий установленную директорию с определенным временным интервалом.
+ */
 class CleanDirectoryThread implements Runnable {
 
-    /** Интервал, с которым происходит очистка директории  */
+    /** Временной интервал, с которым происходит очистка директории  */
     private long time;
 
     /** Очищаемая директория */
     private final String directory;
 
     /**
-     * Конструктор класса-потока-демона, , который очищает определенную директорию с установленным временным интервалом.
+     * Конструктор класса-потока-демона, который очищает определенную директорию с установленным временным интервалом.
      * @param time - время в милисекундах.
      * @param directory - путь к очищаемой директории.
      */
@@ -22,6 +25,9 @@ class CleanDirectoryThread implements Runnable {
     }
 
     @Override
+    /**
+     * Удаление всех файлов из директории с установленным временным интервалом.
+     */
     public void run() {
         File directoryToClean = new File(directory);
         while (!Thread.currentThread().isInterrupted()) {

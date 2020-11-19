@@ -70,7 +70,6 @@ public class StudentRepositoryTest {
     @Test
     @DisplayName("Read")
     public void testFindStudent() {
-
         studentRepository.addStudent(testStudent1);
         List<Student> students = studentRepository.findStudent("Ivan", "Ivanov");
         Assertions.assertEquals(1, students.size());
@@ -83,7 +82,6 @@ public class StudentRepositoryTest {
     @Test
     @DisplayName("Update")
     public void testUpdateInfo() {
-
         studentRepository.addStudent(testStudent1);
         Boolean initialScholarship = testStudent1.hasScholarship();
         testStudent1.setScholarship(!testStudent1.hasScholarship());
@@ -91,12 +89,6 @@ public class StudentRepositoryTest {
         List<Student> students = studentRepository.findAll();
         Assertions.assertEquals(1, students.size());
         Assertions.assertNotEquals(initialScholarship, students.get(0).hasScholarship());
-
-        /*
-        Пытаемся обновить информацию о студенте, которого нет в таблице.
-         */
-        Assertions.assertDoesNotThrow(() -> {studentRepository.updateInfo(testStudent2);});
-        Assertions.assertEquals(1, studentRepository.findAll().size());
     }
 
     /**

@@ -96,7 +96,7 @@ public class Student {
     }
 
     /**
-     * Сущности сравниваем по id.
+     * Сравниваем студентов по id.
      * @param obj - объект для сравнения.
      * @return - TRUE || FALSE.
      */

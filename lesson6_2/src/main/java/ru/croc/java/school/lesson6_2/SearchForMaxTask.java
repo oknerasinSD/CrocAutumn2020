@@ -16,6 +16,12 @@ public class SearchForMaxTask implements Callable<Integer> {
     /** Конечный элемент для данной конкретной задачи */
     private int end;
 
+    /**
+     * Конструктор класса, описывающего задачу для отедльного потока по поиску максимального элемента в массиве.
+     * @param array - массив, в котором ищется максимумю
+     * @param start - начальный элемент диапазона, за который отвечает текущая задача.
+     * @param end - конечный элемент диапазона, за который отвечает текущая задача.
+     */
     public SearchForMaxTask(int[] array, int start, int end) {
         this.array = array;
         this.start = start;
@@ -23,6 +29,9 @@ public class SearchForMaxTask implements Callable<Integer> {
     }
 
     @Override
+    /**
+     * Поиск максимума на заданном интервале массива.
+     */
     public Integer call() throws Exception {
         int max = array[start];
         for (int i = start; i < end; ++i) {
