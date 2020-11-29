@@ -1,0 +1,13 @@
+<organization>
+    <id>1</id>
+    <title>Title 1</title>
+    <address>Address 1</address>
+    <phoneNumber>Phone Number 1</phoneNumber>
+    <type>Type 1</type>
+    <openTime>08:00</openTime>
+    <closeTime>20:00</closeTime>
+    <breakStart>14:00</breakStart>
+    <breakEnd>15:00</breakEnd>
+    <foundationDate>2020-01-01</foundationDate>
+    <closeDate/>
+</organization>

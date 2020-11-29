@@ -1,0 +1,28 @@
+<organizations>
+    <organization>
+        <id>1</id>
+        <title>Наименование 1</title>
+        <address>Адрес 1</address>
+        <phoneNumber>Телефон 1</phoneNumber>
+        <type>Муниципальная</type>
+        <openTime/>
+        <closeTime/>
+        <breakStart/>
+        <breakEnd/>
+        <foundationDate>2020-01-01</foundationDate>
+        <closeDate/>
+    </organization>
+    <organization>
+        <id>2</id>
+        <title>Наименование 2</title>
+        <address>Адрес 2</address>
+        <phoneNumber>Телефон 2</phoneNumber>
+        <type>Досуговая</type>
+        <openTime>08:00</openTime>
+        <closeTime>20:00</closeTime>
+        <breakStart/>
+        <breakEnd/>
+        <foundationDate>2019-06-01</foundationDate>
+        <closeDate/>
+    </organization>
+</organizations>

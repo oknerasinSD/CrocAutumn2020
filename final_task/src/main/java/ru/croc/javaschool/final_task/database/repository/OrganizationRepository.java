@@ -1,9 +1,9 @@
-package ru.croc.javaschool.final_task.repository;
+package ru.croc.javaschool.final_task.database.repository;
 
 import org.apache.derby.jdbc.EmbeddedDataSource;
-import ru.croc.javaschool.final_task.converter.DateConverter;
-import ru.croc.javaschool.final_task.converter.TimeConverter;
-import ru.croc.javaschool.final_task.model.Organization;
+import ru.croc.javaschool.final_task.database.converter.DateConverter;
+import ru.croc.javaschool.final_task.database.converter.TimeConverter;
+import ru.croc.javaschool.final_task.database.model.Organization;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrganizationRepository {
 
@@ -63,34 +64,36 @@ public class OrganizationRepository {
         }
     }
 
-    public List<Organization> findOpened(LocalTime time) {
-        Time sqlTime = TimeConverter.toDatabase(time);
-        String sqlQuery =
-                "";
-        try (
-                Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)
-        ) {
-            return createListFromResultSet(preparedStatement.executeQuery());
-        } catch (SQLException e) {
-            System.out.println("Error while searching for opened organizations: " + e.getMessage());
-        }
-        return new ArrayList<>();
+    public List<Organization> findWorking(LocalTime time) {
+        return findAll().stream()
+                .filter(organization -> organization.isWorking(time))
+                .collect(Collectors.toList());
     }
 
-    private void prepareSearchingStatement() {
-
+    private List<Organization> findAll() {
+        String sqlQuery = "SELECT * FROM " + TABLE_NAME;
+        try (
+                Connection connection = dataSource.getConnection();
+                Statement statement = connection.createStatement()
+        ) {
+            return createListFromResultSet(statement.executeQuery(sqlQuery));
+        } catch (SQLException e) {
+            System.out.println("Error while extracting all rows from the table " + TABLE_NAME);
+        }
+        return Collections.emptyList();
     }
 
     private List<Organization> createListFromResultSet(ResultSet resultSet) throws SQLException {
         List<Organization> result = new ArrayList<>();
+        TimeConverter timeConverter = new TimeConverter();
+        DateConverter dateConverter = new DateConverter();
         while (resultSet.next()) {
-            LocalTime openTime = TimeConverter.fromDatabase(resultSet.getTime("open_time"));
-            LocalTime closeTime = TimeConverter.fromDatabase(resultSet.getTime("close_time"));
-            LocalTime breakStart = TimeConverter.fromDatabase(resultSet.getTime("break_start"));
-            LocalTime breakEnd = TimeConverter.fromDatabase(resultSet.getTime("break_end"));
-            LocalDate foundationDate = DateConverter.fromDatabase(resultSet.getDate("foundation_date"));
-            LocalDate closeDate = DateConverter.fromDatabase(resultSet.getDate("close_date"));
+            LocalTime openTime = timeConverter.fromDatabase(resultSet.getTime("open_time"));
+            LocalTime closeTime = timeConverter.fromDatabase(resultSet.getTime("close_time"));
+            LocalTime breakStart = timeConverter.fromDatabase(resultSet.getTime("break_start"));
+            LocalTime breakEnd = timeConverter.fromDatabase(resultSet.getTime("break_end"));
+            LocalDate foundationDate = dateConverter.fromDatabase(resultSet.getDate("foundation_date"));
+            LocalDate closeDate = dateConverter.fromDatabase(resultSet.getDate("close_date"));
             result.add(new Organization(
                     resultSet.getInt("id"),
                     resultSet.getString("title"),
@@ -121,6 +124,29 @@ public class OrganizationRepository {
         }
     }
 
+    private void prepareAddStatement(Organization organization, PreparedStatement statement) throws SQLException {
+        int counter = 1;
+        TimeConverter timeConverter = new TimeConverter();
+        DateConverter dateConverter = new DateConverter();
+        Time openTime = timeConverter.toDatabase(organization.getOpenTime());
+        Time closeTime = timeConverter.toDatabase(organization.getCloseTime());
+        Time breakStart = timeConverter.toDatabase(organization.getBreakStart());
+        Time breakEnd = timeConverter.toDatabase(organization.getBreakEnd());
+        Date foundationDate = dateConverter.toDatabase(organization.getFoundationDate());
+        Date closeDate = dateConverter.toDatabase(organization.getCloseDate());
+        statement.setInt(counter++, organization.getId());
+        statement.setString(counter++, String.valueOf(organization.getTitle()));
+        statement.setString(counter++, String.valueOf(organization.getAddress()));
+        statement.setString(counter++, String.valueOf(organization.getPhoneNumber()));
+        statement.setString(counter++, String.valueOf(organization.getType()));
+        statement.setTime(counter++, openTime);
+        statement.setTime(counter++, closeTime);
+        statement.setTime(counter++, breakStart);
+        statement.setTime(counter++, breakEnd);
+        statement.setDate(counter++, foundationDate);
+        statement.setDate(counter, closeDate);
+    }
+
     public Organization find(int id) {
         String sqlQuery = "SELECT * FROM " + TABLE_NAME + " WHERE id = " + id;
         List<Organization> listFromResultSet = Collections.emptyList();
@@ -136,30 +162,6 @@ public class OrganizationRepository {
             throw new IllegalStateException("Multiple entries with same ID.");
         }
         return listFromResultSet.isEmpty() ? null : listFromResultSet.get(0);
-    }
-
-    private void prepareAddStatement(
-            Organization organization,
-            PreparedStatement preparedStatement
-    ) throws SQLException {
-        int counter = 1;
-        Time openTime = TimeConverter.toDatabase(organization.getOpenTime());
-        Time closeTime = TimeConverter.toDatabase(organization.getCloseTime());
-        Time breakStart = TimeConverter.toDatabase(organization.getBreakStart());
-        Time breakEnd = TimeConverter.toDatabase(organization.getBreakEnd());
-        Date foundationDate = DateConverter.toDatabase(organization.getFoundationDate());
-        Date closeDate = DateConverter.toDatabase(organization.getCloseDate());
-        preparedStatement.setInt(counter++, organization.getId());
-        preparedStatement.setString(counter++, String.valueOf(organization));
-        preparedStatement.setString(counter++, String.valueOf(organization));
-        preparedStatement.setString(counter++, String.valueOf(organization));
-        preparedStatement.setString(counter++, String.valueOf(organization));
-        preparedStatement.setTime(counter++, openTime);
-        preparedStatement.setTime(counter++, closeTime);
-        preparedStatement.setTime(counter++, breakStart);
-        preparedStatement.setTime(counter++, breakEnd);
-        preparedStatement.setDate(counter++, foundationDate);
-        preparedStatement.setDate(counter, closeDate);
     }
 
     /**

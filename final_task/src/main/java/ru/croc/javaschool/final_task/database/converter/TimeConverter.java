@@ -1,4 +1,4 @@
-package ru.croc.javaschool.final_task.converter;
+package ru.croc.javaschool.final_task.database.converter;
 
 import java.sql.Time;
 import java.time.LocalTime;
@@ -13,7 +13,7 @@ public class TimeConverter {
      * @param localTime - конвертируемый объект.
      * @return - объект типа java.sql.Time.
      */
-    public static Time toDatabase(LocalTime localTime) {
+    public Time toDatabase(LocalTime localTime) {
         if (localTime != null) {
             return Time.valueOf(localTime);
         } else {
@@ -27,7 +27,7 @@ public class TimeConverter {
      * @param sqlTime - конвертируемый объект.
      * @return - объект типа LocalTime.
      */
-    public static LocalTime fromDatabase(Time sqlTime) {
+    public LocalTime fromDatabase(Time sqlTime) {
         if (sqlTime != null) {
             return sqlTime.toLocalTime();
         } else {

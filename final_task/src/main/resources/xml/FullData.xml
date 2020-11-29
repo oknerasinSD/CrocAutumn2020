@@ -1,0 +1,67 @@
+<organizations>
+    <organization>
+        <id>1</id>
+        <title>Наименование 1</title>
+        <address>Адрес 1</address>
+        <phoneNumber>Телефон 1</phoneNumber>
+        <type>Муниципальная</type>
+        <openTime/>
+        <closeTime/>
+        <breakStart/>
+        <breakEnd/>
+        <foundationDate>2020-01-01</foundationDate>
+        <closeDate/>
+    </organization>
+    <organization>
+        <id>2</id>
+        <title>Наименование 2</title>
+        <address>Адрес 2</address>
+        <phoneNumber>Телефон 2</phoneNumber>
+        <type>Досуговая</type>
+        <openTime>08:00</openTime>
+        <closeTime>20:00</closeTime>
+        <breakStart/>
+        <breakEnd/>
+        <foundationDate>2019-06-01</foundationDate>
+        <closeDate/>
+    </organization>
+    <organization>
+        <id>3</id>
+        <title>Наименование 3</title>
+        <address>Адрес 3</address>
+        <phoneNumber>Телефон 3</phoneNumber>
+        <type>Досуговая</type>
+        <openTime>20:00</openTime>
+        <closeTime>06:00</closeTime>
+        <breakStart/>
+        <breakEnd/>
+        <foundationDate>2015-05-05</foundationDate>
+        <closeDate/>
+    </organization>
+    <organization>
+        <id>4</id>
+        <title>Наименование 4</title>
+        <address>Адрес 4</address>
+        <phoneNumber>Телефон 4</phoneNumber>
+        <type>Муниципальная</type>
+        <openTime>08:00</openTime>
+        <closeTime>00:00</closeTime>
+        <breakStart>15:30</breakStart>
+        <breakEnd>16:30</breakEnd>
+        <foundationDate>2018-02-02</foundationDate>
+        <closeDate/>
+    </organization>
+    <organization>
+        <id>5</id>
+        <title>Наименование 5</title>
+        <address>Адрес 5</address>
+        <phoneNumber>Телефон 5</phoneNumber>
+        <type>Досуговая</type>
+        <openTime>20:00</openTime>
+        <closeTime>06:00</closeTime>
+        <breakStart>23:00</breakStart>
+        <breakEnd>01:00</breakEnd>
+        <foundationDate>2012-10-10</foundationDate>
+        <closeDate/>
+    </organization>
+</organizations>

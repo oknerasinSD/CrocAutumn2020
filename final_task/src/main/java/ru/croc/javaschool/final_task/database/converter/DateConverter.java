@@ -1,4 +1,4 @@
-package ru.croc.javaschool.final_task.converter;
+package ru.croc.javaschool.final_task.database.converter;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -13,7 +13,7 @@ public class DateConverter {
      * @param localDate - конвертируемыый объект.
      * @return - объект типа java.sql.Date.
      */
-    public static Date toDatabase(LocalDate localDate) {
+    public Date toDatabase(LocalDate localDate) {
         if (localDate != null) {
             return Date.valueOf(localDate);
         } else {
@@ -26,7 +26,7 @@ public class DateConverter {
      * @param sqlDate - конвертируемый объект.
      * @return - объект типа LocalDate.
      */
-    public static LocalDate fromDatabase(Date sqlDate) {
+    public LocalDate fromDatabase(Date sqlDate) {
         if (sqlDate != null) {
             return sqlDate.toLocalDate();
         } else {
