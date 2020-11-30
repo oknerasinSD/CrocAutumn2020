@@ -17,8 +17,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 
+/**
+ * Тестирование сериализации Java-объектов в XML.
+ */
 public class JacksonConverterTest {
 
+    /** Путь до директории с файлами для сравнения  */
     private static final String XML_DIRECTORY = "src/main/resources/xml";
 
     private Organization testOrganization1;
@@ -102,8 +106,6 @@ public class JacksonConverterTest {
 
         Path path = Paths.get(XML_DIRECTORY, "NullObjectTest.xml");
         String expected = Files.readString(path);
-
-        System.out.println(xml);
 
         XMLUnit.setIgnoreWhitespace(true);
         Assertions.assertTrue(XMLUnit.compareXML(expected, xml).similar());

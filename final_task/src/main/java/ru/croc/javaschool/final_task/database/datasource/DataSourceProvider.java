@@ -43,7 +43,7 @@ public class DataSourceProvider {
 
     /**
      * Получение экземпляра DataSource.
-     * @return - Объект типа DataSource.
+     * @return - объект типа DataSource.
      */
     public EmbeddedDataSource getDataSource() {
         if (dataSource == null) {

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -74,6 +73,9 @@ public class Organization {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate closeDate;
 
+    /**
+     * Конструктор для случая, когда неизвестна дата упразднения.
+     */
     public Organization(Integer id, String title, String address, String phoneNumber, String type, LocalTime openTime,
                         LocalTime closeTime, LocalTime breakStart, LocalTime breakEnd, LocalDate foundationDate
     ) {
@@ -90,6 +92,9 @@ public class Organization {
         closeDate = null;
     }
 
+    /**
+     * Для случая, когда известна дата упразднения.
+     */
     public Organization(Integer id, String title, String address, String phoneNumber, String type, LocalTime openTime,
                         LocalTime closeTime, LocalTime breakStart, LocalTime breakEnd, LocalDate foundationDate,
                         LocalDate closeDate
@@ -139,7 +144,7 @@ public class Organization {
     }
 
     /**
-     * Проверка того, вписывается ли указанный момент времени в рабочие часы организации без учета перерыва.
+     * Проверка того, вписывается ли указанный момент времени в рабочие часы организации (без учета перерыва).
      *
      * - Если рабочий день организации заканчивается в те же сутки, что и начался, то необходимо,
      * чтобы проверяемое время находилось между значениями openTime и closeTime.

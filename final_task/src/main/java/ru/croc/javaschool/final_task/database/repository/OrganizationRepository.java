@@ -13,6 +13,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Репозиторий для доступа к таблице с данными о предприятиях.
+ */
 public class OrganizationRepository {
 
     /** Имя таблицы */
@@ -64,12 +67,21 @@ public class OrganizationRepository {
         }
     }
 
+    /**
+     * Поиск предприятий, работающих на момент утсановленного времени.
+     * @param time - проверяемое время.
+     * @return - список подходящих организаций.
+     */
     public List<Organization> findWorking(LocalTime time) {
         return findAll().stream()
                 .filter(organization -> organization.isWorking(time))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Извлечение данных обо всех организациях из базы.
+     * @return - список всех доступных организаций.
+     */
     private List<Organization> findAll() {
         String sqlQuery = "SELECT * FROM " + TABLE_NAME;
         try (
@@ -83,6 +95,12 @@ public class OrganizationRepository {
         return Collections.emptyList();
     }
 
+    /**
+     * Создание списка организаций из объекта типа ResultSet.
+     * @param resultSet - анализируемый объект типа ResultSet.
+     * @return - список объектов типа Organization.
+     * @throws SQLException - ошибка при взаимодействии с resultSet.
+     */
     private List<Organization> createListFromResultSet(ResultSet resultSet) throws SQLException {
         List<Organization> result = new ArrayList<>();
         TimeConverter timeConverter = new TimeConverter();
@@ -111,6 +129,10 @@ public class OrganizationRepository {
         return result;
     }
 
+    /**
+     * Добавление записи в базу.
+     * @param organization - добавляемая организация.
+     */
     public void add(Organization organization) {
         String sqlQuery = "INSERT INTO " + TABLE_NAME + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (
@@ -124,6 +146,12 @@ public class OrganizationRepository {
         }
     }
 
+    /**
+     * Подстановка параметров в SQL-запрос для добавления данных в таблицу.
+     * @param organization - добавляемая организация.
+     * @param statement - объект, приводящий SQL-запрос в исполнение.
+     * @throws SQLException - ошибка подстановки данных.
+     */
     private void prepareAddStatement(Organization organization, PreparedStatement statement) throws SQLException {
         int counter = 1;
         TimeConverter timeConverter = new TimeConverter();
@@ -147,6 +175,11 @@ public class OrganizationRepository {
         statement.setDate(counter, closeDate);
     }
 
+    /**
+     * Поиск организации в БД по id.
+     * @param id - искомый идентификатор.
+     * @return - объект типа Organization.
+     */
     public Organization find(int id) {
         String sqlQuery = "SELECT * FROM " + TABLE_NAME + " WHERE id = " + id;
         List<Organization> listFromResultSet = Collections.emptyList();
