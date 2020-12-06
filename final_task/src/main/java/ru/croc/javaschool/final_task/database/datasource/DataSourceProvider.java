@@ -18,20 +18,26 @@ public class DataSourceProvider {
     /** Параметры конфигурации */
     private Map<String, String> properties = new HashMap<>();
 
-    public DataSourceProvider() throws IOException {
-        loadProperties();
+    /** Мапа, устанавливающее соответствия между типми из перечисления PropertyType
+     * и путями к нужным конфигурационным файлам */
+    private Map<PropertyType, String> propertyTypes = Map.ofEntries(
+            Map.entry(PropertyType.MAIN, "application.properties"),
+            Map.entry(PropertyType.TEST, "test.properties")
+    );
+
+    public DataSourceProvider(PropertyType propertyType) throws IOException {
+        String propertyPath = propertyTypes.get(propertyType);
+        loadProperties(propertyPath);
     }
 
     /**
      * Загрузка параметров конфигурации
      * @throws IOException - ошибка загрузки настроек
      */
-    private void loadProperties() throws IOException {
+    private void loadProperties(String propertyPath) throws IOException {
         Properties properties = new Properties();
         try {
-            properties.load(
-                    Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties")
-            );
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(propertyPath));
             for (Map.Entry<Object, Object> entry : properties.entrySet()) {
                 this.properties.put((String) entry.getKey(), (String) entry.getValue());
             }
@@ -48,11 +54,15 @@ public class DataSourceProvider {
     public EmbeddedDataSource getDataSource() {
         if (dataSource == null) {
             dataSource = new EmbeddedDataSource();
-            dataSource.setUser("");
-            dataSource.setPassword("");
             dataSource.setDatabaseName(properties.get("dbname"));
+            dataSource.setUser(properties.get("username"));
+            dataSource.setPassword(properties.get("password"));
             dataSource.setCreateDatabase("create");
         }
         return dataSource;
+    }
+
+    public String getDbName() {
+        return properties.get("dbname");
     }
 }

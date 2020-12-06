@@ -2,6 +2,7 @@ package ru.croc.javaschool.final_task.database.repository;
 
 import org.junit.jupiter.api.*;
 import ru.croc.javaschool.final_task.database.datasource.DataSourceProvider;
+import ru.croc.javaschool.final_task.database.datasource.PropertyType;
 import ru.croc.javaschool.final_task.database.model.Organization;
 
 import java.io.IOException;
@@ -18,11 +19,14 @@ public class OrganizationRepositoryTest {
     /** Репозиторий */
     private OrganizationRepository repository;
 
+    /** Провайдер для доступа к БД */
+    private DataSourceProvider dataSourceProvider;
+
     /*
     Тестовые организации для различных случаев.
      */
 
-    /** Работает круглосуточно - должна всегда находится при поиске */
+    /** Работает круглосуточно - должна всегда находиться при поиске */
     private Organization roundTheClockOrg;
 
     /** Работает с 8 до 20 - игнорируется при проверке другого времени */
@@ -39,7 +43,7 @@ public class OrganizationRepositoryTest {
 
     @BeforeEach
     public void init() throws IOException {
-        DataSourceProvider dataSourceProvider = new DataSourceProvider();
+        dataSourceProvider = new DataSourceProvider(PropertyType.TEST);
         repository = new OrganizationRepository(dataSourceProvider.getDataSource());
         roundTheClockOrg = new Organization(
                 1,
@@ -106,6 +110,12 @@ public class OrganizationRepositoryTest {
     @AfterEach
     public void clear() {
         repository.dropTable();
+    }
+
+    @Test
+    @DisplayName("Проверка подключения к тестовой БД")
+    public void testConnection() {
+        Assertions.assertEquals("db_test", dataSourceProvider.getDbName());
     }
 
     @Test

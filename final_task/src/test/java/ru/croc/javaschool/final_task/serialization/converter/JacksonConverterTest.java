@@ -23,7 +23,7 @@ import java.util.Arrays;
 public class JacksonConverterTest {
 
     /** Путь до директории с файлами для сравнения  */
-    private static final String XML_DIRECTORY = "src/main/resources/xml";
+    private static final String XML_DIRECTORY = "src/test/resources/xml";
 
     private Organization testOrganization1;
     private Organization testOrganization2;

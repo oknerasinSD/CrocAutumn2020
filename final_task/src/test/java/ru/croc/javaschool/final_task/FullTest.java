@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 import ru.croc.javaschool.final_task.database.datasource.DataSourceProvider;
+import ru.croc.javaschool.final_task.database.datasource.PropertyType;
 import ru.croc.javaschool.final_task.database.model.Organization;
 import ru.croc.javaschool.final_task.database.repository.OrganizationRepository;
 import ru.croc.javaschool.final_task.serialization.converter.JacksonConverter;
@@ -22,10 +23,11 @@ import java.time.LocalTime;
 /**
  * Тестирование полного процесса работы программы.
  */
+
 public class FullTest {
 
     /** Пусть до директории с XML-файлами для проверки корректености сериализации */
-    private static final String XML_DIRECTORY = "src/main/resources/xml";
+    private static final String XML_DIRECTORY = "src/test/resources/xml";
 
     /** Репозиторий */
     private OrganizationRepository repository;
@@ -47,7 +49,7 @@ public class FullTest {
 
     @BeforeEach
     public void init() throws IOException {
-        DataSourceProvider dataSourceProvider = new DataSourceProvider();
+        DataSourceProvider dataSourceProvider = new DataSourceProvider(PropertyType.TEST);
         repository = new OrganizationRepository(dataSourceProvider.getDataSource());
         roundTheClockOrg = new Organization(
                 1,
