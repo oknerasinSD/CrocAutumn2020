@@ -27,19 +27,19 @@ public class OrganizationRepository {
     /** SQL запрос для создания таблицы */
     private static final String CREATE_QUERY =
             "CREATE TABLE " + TABLE_NAME + "("
-            + "id INTEGER PRIMARY KEY, "
-            + "title VARCHAR(255), "
-            + "address VARCHAR(255), "
-            + "phone_number VARCHAR(255), "
-            + "type VARCHAR(255), "
-            + "open_time TIME, "
-            + "close_time TIME, "
-            + "break_start TIME, "
-            + "break_end TIME, "
-            + "foundation_date DATE, "
-            + "close_date DATE)";
+                    + "id INTEGER PRIMARY KEY, "
+                    + "title VARCHAR(255), "
+                    + "address VARCHAR(255), "
+                    + "phone_number VARCHAR(255), "
+                    + "type VARCHAR(255), "
+                    + "open_time TIME, "
+                    + "close_time TIME, "
+                    + "break_start TIME, "
+                    + "break_end TIME, "
+                    + "foundation_date DATE, "
+                    + "close_date DATE)";
 
-    public OrganizationRepository(EmbeddedDataSource dataSource) {
+    public OrganizationRepository(EmbeddedDataSource dataSource) throws SQLException {
         this.dataSource = dataSource;
         initTable();
     }
@@ -47,8 +47,8 @@ public class OrganizationRepository {
     /**
      * Инициализация таблицы.
      */
-    private void initTable() {
-        try(
+    private void initTable() throws SQLException {
+        try (
                 Connection connection = dataSource.getConnection();
                 Statement statement = connection.createStatement()
         ) {
@@ -57,13 +57,11 @@ public class OrganizationRepository {
                     null,
                     null,
                     TABLE_NAME.toUpperCase(),
-                    new String[] {"TABLE"}
+                    new String[]{"TABLE"}
             );
             if (!resultSet.next()) {
                 statement.executeUpdate(CREATE_QUERY);
             }
-        } catch (SQLException e) {
-            System.out.println("Error during initializing table: " + e.getMessage());
         }
     }
 
@@ -72,7 +70,7 @@ public class OrganizationRepository {
      * @param time - проверяемое время.
      * @return - список подходящих организаций.
      */
-    public List<Organization> findWorking(LocalTime time) {
+    public List<Organization> findWorking(LocalTime time) throws SQLException {
         return findAll().stream()
                 .filter(organization -> organization.isWorking(time))
                 .collect(Collectors.toList());
@@ -82,17 +80,14 @@ public class OrganizationRepository {
      * Извлечение данных обо всех организациях из базы.
      * @return - список всех доступных организаций.
      */
-    private List<Organization> findAll() {
+    private List<Organization> findAll() throws SQLException {
         String sqlQuery = "SELECT * FROM " + TABLE_NAME;
         try (
                 Connection connection = dataSource.getConnection();
                 Statement statement = connection.createStatement()
         ) {
             return createListFromResultSet(statement.executeQuery(sqlQuery));
-        } catch (SQLException e) {
-            System.out.println("Error while extracting all rows from the table " + TABLE_NAME);
         }
-        return Collections.emptyList();
     }
 
     /**
@@ -133,7 +128,7 @@ public class OrganizationRepository {
      * Добавление записи в базу.
      * @param organization - добавляемая организация.
      */
-    public void add(Organization organization) {
+    public void add(Organization organization) throws SQLException {
         String sqlQuery = "INSERT INTO " + TABLE_NAME + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (
                 Connection connection = dataSource.getConnection();
@@ -141,8 +136,6 @@ public class OrganizationRepository {
         ) {
             prepareAddStatement(organization, preparedStatement);
             preparedStatement.execute();
-        } catch (SQLException e) {
-            System.out.println("Error during adding organization into database: " + e.getMessage());
         }
     }
 
@@ -180,7 +173,7 @@ public class OrganizationRepository {
      * @param id - искомый идентификатор.
      * @return - объект типа Organization.
      */
-    public Organization find(int id) {
+    public Organization find(int id) throws SQLException {
         String sqlQuery = "SELECT * FROM " + TABLE_NAME + " WHERE id = " + id;
         List<Organization> listFromResultSet = Collections.emptyList();
         try (
@@ -188,8 +181,6 @@ public class OrganizationRepository {
                 PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)
         ) {
             listFromResultSet = createListFromResultSet(preparedStatement.executeQuery());
-        } catch (SQLException e) {
-            System.out.println("Error during searching for organization by id: " + e.getMessage());
         }
         if (listFromResultSet.size() > 1) {
             throw new IllegalStateException("Multiple entries with same ID.");
@@ -200,12 +191,10 @@ public class OrganizationRepository {
     /**
      * Удаление таблицы из базы.
      */
-    public void dropTable() {
+    public void dropTable() throws SQLException {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate("DROP TABLE " + TABLE_NAME);
-        } catch (SQLException e) {
-            System.out.println("Error during dropping table: " + e.getMessage());
         }
     }
 }

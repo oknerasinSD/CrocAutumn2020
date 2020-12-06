@@ -6,6 +6,7 @@ import ru.croc.javaschool.final_task.database.datasource.PropertyType;
 import ru.croc.javaschool.final_task.database.model.Organization;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -42,7 +43,7 @@ public class OrganizationRepositoryTest {
     private Organization org20to6withBreak;
 
     @BeforeEach
-    public void init() throws IOException {
+    public void init() throws IOException, SQLException {
         dataSourceProvider = new DataSourceProvider(PropertyType.TEST);
         repository = new OrganizationRepository(dataSourceProvider.getDataSource());
         roundTheClockOrg = new Organization(
@@ -108,7 +109,7 @@ public class OrganizationRepositoryTest {
     }
 
     @AfterEach
-    public void clear() {
+    public void clear() throws SQLException {
         repository.dropTable();
     }
 
@@ -120,7 +121,7 @@ public class OrganizationRepositoryTest {
 
     @Test
     @DisplayName("Добавление и извлечение данных в/из БД")
-    public void testDb() throws IOException {
+    public void testDb() throws IOException, SQLException {
         repository.add(roundTheClockOrg);
         Organization organization = repository.find(roundTheClockOrg.getId());
         Assertions.assertEquals(roundTheClockOrg, organization);
@@ -128,7 +129,7 @@ public class OrganizationRepositoryTest {
 
     @Test
     @DisplayName("Игнор: стандартный случай")
-    public void testSkipOpenCloseSameDay() {
+    public void testSkipOpenCloseSameDay() throws SQLException {
         repository.add(roundTheClockOrg);
         repository.add(org8to20);
         List<Organization> workingOrganizations = repository.findWorking(LocalTime.of(7, 0));
@@ -138,7 +139,7 @@ public class OrganizationRepositoryTest {
 
     @Test()
     @DisplayName("Учет: конец работы на следующий день")
-    public void testNotSkipCloseNextDay() {
+    public void testNotSkipCloseNextDay() throws SQLException {
         repository.add(roundTheClockOrg);
         repository.add(org8to20);
         repository.add(org20to6);
@@ -150,7 +151,7 @@ public class OrganizationRepositoryTest {
 
     @Test
     @DisplayName("Игнор в перерыв: стандартный случай")
-    public void testSkipBreakSameDay() {
+    public void testSkipBreakSameDay() throws SQLException {
         repository.add(roundTheClockOrg);
         repository.add(org8to20);
         repository.add(org8to00WithBreak);
@@ -162,7 +163,7 @@ public class OrganizationRepositoryTest {
 
     @Test
     @DisplayName("Игнор в перерыв: конец перерыва в другой день")
-    public void testSkipBreakNewDay() {
+    public void testSkipBreakNewDay() throws SQLException {
         repository.add(roundTheClockOrg);
         repository.add(org20to6);
         repository.add(org20to6withBreak);
